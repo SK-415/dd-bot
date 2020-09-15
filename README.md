@@ -1,6 +1,6 @@
 # 哔哩哔哩DD机
 
-[![VERSION](https://img.shields.io/badge/version-1.0.0-green)](version)
+[![VERSION](https://img.shields.io/badge/version-1.0.0-green)](https://github.com/SK-415/bilibili-dd-bot/blob/master/CHANGELOG.md)
 [![STARS](https://img.shields.io/github/stars/SK-415/bilibili-dd-bot)](https://github.com/SK-415/bilibili-dd-bot/stargazers)
 [![LICENSE](https://img.shields.io/github/license/SK-415/bilibili-dd-bot)](https://github.com/SK-415/bilibili-dd-bot/blob/master/LICENSE)
 
