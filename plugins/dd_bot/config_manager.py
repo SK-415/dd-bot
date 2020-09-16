@@ -1,14 +1,14 @@
 import nonebot
 from nonebot.permission import GROUP_ADMIN, PRIVATE_FRIEND, SUPERUSER
-from dantui_bot.plugins.utils import Dynamic, Dydb, User, log
-from dantui_bot.plugins.utils import read_config, update_config
+from .utils import Dynamic, Dydb, User, log
+from .utils import read_config, update_config
 import asyncio
 from collections import Counter
 from nonebot import on_command, CommandSession
 
 
-__plugin_name__ = '单推机'
-__plugin_usage__ = r"""单推机目前支持的功能有：
+__plugin_name__ = 'DD机'
+__plugin_usage__ = r"""DD机目前支持的功能有：
 
 主播列表
 添加主播 uid

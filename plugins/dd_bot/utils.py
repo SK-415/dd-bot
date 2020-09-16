@@ -1,7 +1,6 @@
 import sqlite3
 import requests
 import json
-import os
 import base64
 from pyppeteer import launch
 import asyncio
@@ -10,12 +9,6 @@ import functools
 from nonebot.log import logger
 import traceback
 
-
-DEFAULT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/79.0.3945.130 Safari/537.36",
-    "Referer": "https://www.bilibili.com/"
-}
 
 class Dydb():
     def __init__(self):
@@ -82,7 +75,7 @@ class Dynamic():
             self.message = f"{self.name}发布了新动态\n\n传送门→" + self.url + "[CQ:image,file=" + self.image + "]\n"
 
     async def get_screenshot(self):
-        if os.path.isfile(self.img_path):
+        if path.isfile(self.img_path):
             return
         browser = await launch(args=['--no-sandbox'])
         page = await browser.newPage()
@@ -138,38 +131,39 @@ class User():
     
     async def get_info(self):
         url = f'https://api.bilibili.com/x/space/acc/info?mid={self.uid}'
-        return json.loads(await Get(url))['data']
+        return (await Get(url))['data']
 
     async def get_dynamic(self):
         # need_top: {1: 带置顶, 2: 不带置顶}
         url = f'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid={self.uid}&offset_dynamic_id=0&need_top=0'
-        return json.loads(await Get(url))['data']
+        return (await Get(url))['data']
     
     async def get_live_info(self):
         url = f'https://api.live.bilibili.com/room/v1/Room/getRoomInfoOld?mid={self.uid}'
-        return json.loads(await Get(url))['data']
+        return (await Get(url))['data']
 
-# 嘤嘤嘤，异步获取行不通，原因不明
+# # 单个的http请求没必要异步，而且速度反而慢，不知道为什么
 # async def Get(url):
 #     async with aiohttp.ClientSession() as session:
-#         # print('create session')
-#         r = await session.get(url, headers=DEFAULT_HEADERS)
-#         # print('get url')
-#         # await asyncio.sleep(0.1)
-#         text = await r.text(encoding='utf-8')
-#         # print(text)
-#         return text
+#         async with session.get(url, headers=DEFAULT_HEADERS) as r:
+#             return await r.text(encoding='utf-8')
 
 async def Get(url):
+    """简单粗暴的请求模块"""    
+    DEFAULT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/79.0.3945.130 Safari/537.36",
+    "Referer": "https://www.bilibili.com/"
+    }
+
     r = requests.get(url, headers=DEFAULT_HEADERS)
     r.encoding='utf-8'
-    # print(r.text)
-    return r.text
+    return r.json()
 
 async def read_config():
     """读取用户注册信息"""
     try:
-        with open(get_path('config.json'), encoding='utf-8') as f:
+        with open(get_path('config.json'), encoding='utf-8-sig') as f:
             config = json.loads(f.read())
     except FileNotFoundError:
         config = {"status": {}, "uid": {}, "groups": {}, "users": {}, "dynamic": {"uid_list": [], "index": 0}}
@@ -181,7 +175,8 @@ async def update_config(config):
         f.write(json.dumps(config, ensure_ascii=False, indent=4))
 
 def get_path(name):
-    f_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), name)
+    """获取数据文件绝对路径"""
+    f_path = path.abspath(path.join('data', 'dd_bot', name))
     return f_path
 
 def log(func):

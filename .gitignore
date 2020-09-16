@@ -1,7 +1,6 @@
 __pycache__/
-*.log
+/data/*
 test/
-*.json
-*.db
-group_helper
-/config.py
+/log/*
+
+/plugins/group_helper/
