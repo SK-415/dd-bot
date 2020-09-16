@@ -1,5 +1,5 @@
 import nonebot
-from nonebot.permission import GROUP_ADMIN, PRIVATE_FRIEND, SUPERUSER
+from nonebot.permission import GROUP_ADMIN, PRIVATE_FRIEND, SUPERUSER, check_permission
 from .utils import Dynamic, Dydb, User, log
 from .utils import read_config, update_config
 import asyncio
@@ -26,12 +26,14 @@ __plugin_usage__ = r"""DD机目前支持的功能有：
 添加后默认开启直播和动态推送，在哪里（群聊/私聊）添加就会在哪里推送
 """
 
-@nonebot.on_command('添加主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('添加主播')
+# @nonebot.on_command('添加主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('添加主播')
 @log
 async def add_up(session):
     """添加主播并创建对应配置文件"""
     config = await read_config()
+    if not await permission_check(session, config):
+        return
     uid = session.current_arg_text.strip()
     dydb = Dydb()
     if uid not in config["status"]: # uid不在配置文件就创建一个
@@ -41,9 +43,6 @@ async def add_up(session):
             name = user_info["name"]
         except:
             await session.finish("请输入有效的uid")
-        # 不再在添加主播时获取直播状态至配置文件
-        # user_live_info = await user.get_live_info()
-        # config["status"][uid] = user_live_info["liveStatus"]
         config['status'][uid] = 0
         config['uid'][uid] = {'groups': {}, 'users': {}, 'dynamic': 0, 'live': 0, 'name': name}
         config['dynamic']['uid_list'].append(uid) # 主播uid添加至动态列表，在DD机中应删除
@@ -54,14 +53,6 @@ async def add_up(session):
     tables = dydb.get_table_list()
     if 'uid' + uid not in tables:
         dydb.create_table('uid'+uid, '(time int primary key, url varchar(50), is_recall boolean)') # 创建uid表
-        # 不再在添加主播的时候获取最近动态
-        # user = User(uid)
-        # # await asyncio.sleep(0.1)
-        # dynamics = await user.get_dynamic()
-        # # print(dynamics)
-        # for dynamic in dynamics['cards'][:3]: # 添加最近三条动态进数据库
-        #     dynamic = Dynamic(dynamic)
-        #     dydb.insert_uid(uid, dynamic.time, dynamic.url, True)
 
     if session.event.detail_type == "group": # 检测是否群消息
         group_id = str(session.event.group_id)
@@ -74,7 +65,7 @@ async def add_up(session):
         if group_id in config["groups"]:
             config["groups"][group_id]["uid"][uid] = {"live_reminder": True, "dynamic": True, 'at': False}
         else:
-            config["groups"][group_id] = {"uid": {uid: {"live_reminder": True, "dynamic": True, 'at': False}}}
+            config["groups"][group_id] = {"uid": {uid: {"live_reminder": True, "dynamic": True, 'at': False}}, 'admin': True}
         config['uid'][uid]['dynamic'] += 1
         config['uid'][uid]['live'] += 1
         await update_config(config)
@@ -95,11 +86,13 @@ async def add_up(session):
         await update_config(config)
         await session.send(f"已添加{name}（{uid}）")
 
-@nonebot.on_command('主播列表', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('主播列表')
+# @nonebot.on_command('主播列表', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('主播列表')
 @log
 async def list_up(session):
     config = await read_config()
+    if not await permission_check(session, config):
+        return
     if session.event.detail_type == 'group':
         group_id = str(session.event.group_id)
         try:
@@ -122,12 +115,14 @@ async def list_up(session):
         message += f"（{uid}）\n"
     await session.send(message=message)
     
-@nonebot.on_command('删除主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('删除主播')
+# @nonebot.on_command('删除主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('删除主播')
 @log
 async def delete_up(session):
-    uid = session.current_arg_text.strip()
     config = await read_config()
+    if not await permission_check(session, config):
+        return
+    uid = session.current_arg_text.strip()
     try:
         name = config['uid'][uid]['name']
     except KeyError:
@@ -142,7 +137,7 @@ async def delete_up(session):
             del config['groups'][group_id]['uid'][uid]
             del config['uid'][uid]['groups'][group_id]
             # 如果用户没有关注则删除用户
-            if config['groups'][group_id]['uid'] == {}:
+            if config['groups'][group_id]['uid'] == {} and config['groups'][group_id]['admin']:
                 del config['groups'][group_id]
         except KeyError:
             session.finish("删除失败，uid不存在")
@@ -176,12 +171,14 @@ async def delete_up(session):
     await update_config(config)
     await session.finish(f"已删除 {name}（{uid}）")
 
-@nonebot.on_command('开启动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('开启动态')
+# @nonebot.on_command('开启动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('开启动态')
 @log
 async def dynamic_on(session):
-    uid = session.current_arg_text.strip()
     config = await read_config()
+    if not await permission_check(session, config):
+        return
+    uid = session.current_arg_text.strip()
     if session.event.detail_type == 'group':
         group_id = str(session.event.group_id)
         try:
@@ -209,12 +206,14 @@ async def dynamic_on(session):
     await update_config(config)
     await session.finish(f"已开启 {name}（{uid}）的动态推送")
 
-@nonebot.on_command('关闭动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('关闭动态')
+# @nonebot.on_command('关闭动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('关闭动态')
 @log
 async def dynamic_off(session):
-    uid = session.current_arg_text.strip()
     config = await read_config()
+    if not await permission_check(session, config):
+        return
+    uid = session.current_arg_text.strip()
     if session.event.detail_type == 'group':
         group_id = str(session.event.group_id)
         try:
@@ -242,12 +241,14 @@ async def dynamic_off(session):
     await update_config(config)
     await session.finish(f"已关闭 {name}（{uid}）的动态推送")
 
-@nonebot.on_command('开启直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('开启直播')
+# @nonebot.on_command('开启直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('开启直播')
 @log
 async def live_on(session):
-    uid = session.current_arg_text.strip()
     config = await read_config()
+    if not await permission_check(session, config):
+        return
+    uid = session.current_arg_text.strip()
     if session.event.detail_type == 'group':
         group_id = str(session.event.group_id)
         try:
@@ -275,12 +276,14 @@ async def live_on(session):
     await update_config(config)
     await session.finish(f"已开启 {name}（{uid}）的直播推送")
 
-@nonebot.on_command('关闭直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-# @nonebot.on_command('关闭直播')
+# @nonebot.on_command('关闭直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@nonebot.on_command('关闭直播')
 @log
 async def live_off(session):
-    uid = session.current_arg_text.strip()
     config = await read_config()
+    if not await permission_check(session, config):
+        return
+    uid = session.current_arg_text.strip()
     if session.event.detail_type == 'group':
         group_id = str(session.event.group_id)
         try:
@@ -348,6 +351,56 @@ async def at_off(session: CommandSession):
     name = config['uid'][uid]['name']
     await session.send(f"已关闭 {name}（{uid}）的 @全体成员")
 
+@on_command('开启权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@log
+async def permission_on(session: CommandSession):
+    if session.event.detail_type != 'group':
+        await session.send("只有群里才能设置权限")
+        return
+    config = await read_config()
+    group_id = str(session.event.group_id)
+
+    if group_id not in config['groups'] or config['groups'][group_id]['admin']:
+        await session.send("请勿重复开启权限")
+        return
+    else:
+        config['groups'][group_id]['admin'] = True
+
+    await update_config(config)
+    await session.send(f"已开启权限限制，只有管理员才能触发指令")
+
+@on_command('关闭权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+@log
+async def permission_off(session: CommandSession):
+    if session.event.detail_type != 'group':
+        await session.send("只有群里才能设置权限")
+        return
+    config = await read_config()
+    group_id = str(session.event.group_id)
+
+    if group_id not in config['groups']:
+        config['groups'][group_id] = {'uid': {}, 'admin': False}
+    elif not config['groups'][group_id]['admin']:
+        await session.send("请勿重复关闭权限")
+        return
+    else:
+        config['groups'][group_id]['admin'] = False
+
+    await update_config(config)
+    await session.send(f"已关闭权限限制，所有人都能触发指令")
+
+async def permission_check(session: CommandSession, config):
+    if session.event.detail_type == 'group':
+        group_id = str(session.event.group_id)
+        if group_id not in config['groups']:
+           return True 
+        if config['groups'][group_id]['admin']:
+            return await check_permission(session.bot, session.event, GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+        else:
+            return True
+    elif session.event.detail_type == 'private':
+        return await check_permission(session.bot, session.event, PRIVATE_FRIEND)
+
 @nonebot.on_command('修复配置', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
 async def fix_config(session):
@@ -395,6 +448,11 @@ async def fix_config(session):
     for uid in config['uid']:
         if 'live_reminder' in config['uid'][uid]:
             del config['uid'][uid]['live_reminder']
+
+    # 检查是否有权限选项
+    for group_id in config['groups']:
+        if 'admin' not in config['groups'][group_id]:
+            config['groups'][group_id]['admin'] = True
 
     # 将动态和直播订阅总数填入对应uid
     for uid, sub_num in dy_counter.items():
