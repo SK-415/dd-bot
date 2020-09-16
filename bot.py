@@ -13,7 +13,7 @@ if __name__ == '__main__':
     nonebot.load_plugin('help')
     
     # 将工作目录切换到 bot.py 所在的文件夹
-    os.chdir(path.dirname(__file__))
+    os.chdir(path.dirname(path.abspath(__file__)))
 
     # 导入 \plugins 下所有的插件
     for dirname in os.listdir('plugins'):
