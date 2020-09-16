@@ -1,6 +1,4 @@
 __pycache__/
-/data/*
 test/
-/log/*
 
 /plugins/group_helper/
