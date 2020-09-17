@@ -11,4 +11,4 @@ async def friend_req(session: RequestSession):
 @on_request('group')
 async def group_invite(session: RequestSession):
     if session.event.sub_type == 'invite' and await check_permission(session.bot, session.event, PRIVATE_FRIEND):
-        await session.bot.set_group_add_request(flag=session.flag, sub_type='invite', approve=True)
+        await session.bot.set_group_add_request(flag=session.event.flag, sub_type='invite', approve=True)
