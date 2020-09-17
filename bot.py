@@ -17,11 +17,14 @@ if __name__ == '__main__':
 
     # 导入 \plugins 下所有的插件
     for dirname in os.listdir('plugins'):
-        if path.isdir(path.join('plugins', dirname)):
+        if dirname != '__pycache__' and path.isdir(path.join('plugins', dirname)):
             nonebot.load_plugins(
                 path.join(path.abspath('.'), 'plugins', dirname),
                 'plugins.' + dirname
             )
+            # 检查是否有对应 data 文件夹, 没有就创建一个
+            if not path.isdir(path.join('data', dirname)):
+                os.makedirs(path.join('data', dirname))
 
     # 设置 DEBUG 日志
     debug_handler = logging.handlers.TimedRotatingFileHandler(
