@@ -400,6 +400,8 @@ async def permission_check(session: CommandSession, config):
                 return False
         else:
             return True
+    else:
+        return True
 
 @nonebot.on_command('修复配置', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
