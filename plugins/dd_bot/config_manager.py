@@ -395,7 +395,10 @@ async def permission_check(session: CommandSession, config):
         if group_id not in config['groups']:
            return True 
         if config['groups'][group_id]['admin']:
-            return await check_permission(session.bot, session.event, GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
+            if not await check_permission(session.bot, session.event, GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER):
+                session.send('权限不足，无法使用')
+            else:
+                return True
         else:
             return True
     elif session.event.detail_type == 'private':
