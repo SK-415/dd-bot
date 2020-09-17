@@ -166,7 +166,7 @@ async def read_config():
         with open(get_path('config.json'), encoding='utf-8-sig') as f:
             config = json.loads(f.read())
     except FileNotFoundError:
-        config = {"status": {}, "uid": {}, "groups": {}, "users": {}, "dynamic": {"uid_list": [], "index": 0}}
+        config = {"status": {}, "uid": {}, "groups": {}, "users": {}, "dynamic": {"uid_list": [], "index": 0}, 'live': {'uid_list': [], 'index': 0}}
     return config
 
 async def update_config(config):
