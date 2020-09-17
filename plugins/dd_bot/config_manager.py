@@ -396,7 +396,7 @@ async def permission_check(session: CommandSession, config):
            return True 
         if config['groups'][group_id]['admin']:
             if not await check_permission(session.bot, session.event, GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER):
-                session.send('权限不足，无法使用')
+                await session.send('权限不足，无法使用')
             else:
                 return True
         else:
