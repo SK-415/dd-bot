@@ -26,16 +26,29 @@
 
 待更新
 
+## 实装列表
+
+> 目前实装的粉丝群, 感谢各位VUP和管理员们对本项目的支持
+
+- [@白神遥Haruka](https://space.bilibili.com/477332594)
+- [@寇蔻_Official](https://space.bilibili.com/493549454)
+- [@初霜Shimo](https://space.bilibili.com/743603)
+- [@宫本夏凌](https://space.bilibili.com/1319467)
+- [@秋凛子Rinco](https://space.bilibili.com/479633069)
+- [@月霖_咕咕](https://space.bilibili.com/4322043)
+
 ## 鸣谢
 
 > 以下项目均直接或间接对本项目提供了帮助
 
-https://github.com/nonebot/nonebot
+- [`nonebot`](https://github.com/nonebot/nonebot) : DD机的根基, 感谢RC带来了如此强大的框架
 
-https://github.com/Mrs4s/go-cqhttp
+- [`nonebot2`](https://github.com/nonebot/nonebot2) : 什么都别说了, RCNB!
 
-https://github.com/mamoe/mirai
+- [`go-cqhttp`](https://github.com/Mrs4s/go-cqhttp) : 感谢Mrs4s对mirai与cqhttp协议的移植, 使本项目能无缝移植到mirai上
 
-https://github.com/SocialSisterYi/bilibili-API-collect
+- [`mirai`](https://github.com/mamoe/mirai) : 感谢mirai社区延续了QQ机器人的火种
 
-https://github.com/Passkou/bilibili_api
+- [`bilibili-API-collect`](https://github.com/SocialSisterYi/bilibili-API-collect) : 目前最新最详细的B站api文档, 对本项目提供了极大的帮助
+
+- [`bilibili_api`](https://github.com/Passkou/bilibili_api) : 好用而又强大的一个Python库, 为本项目的爬取逻辑提供了参考
