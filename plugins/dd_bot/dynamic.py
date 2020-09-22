@@ -3,6 +3,7 @@ import asyncio
 import os
 from .utils import Dynamic, Dydb, User, log
 from .utils import read_config, update_config
+from datetime import datetime, timedelta
 
 
 @nonebot.scheduler.scheduled_job('cron', second='*/10')
@@ -36,7 +37,7 @@ async def _():
     last_time = data[0][0]
     for dynamic in reversed(dynamics[:3]): # 取最近3条动态
         dynamic = Dynamic(dynamic)
-        if dynamic.time > last_time:
+        if dynamic.time > last_time and dynamic.time > datetime.now().timestamp() - timedelta(minutes=10).seconds:
             await dynamic.get_screenshot()
             await dynamic.encode()
             os.remove(dynamic.img_path)

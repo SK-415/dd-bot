@@ -4,6 +4,8 @@ import json
 import base64
 from pyppeteer import launch
 import asyncio
+import os
+import sys
 from os import path
 import functools
 from nonebot.log import logger
@@ -189,3 +191,9 @@ def log(func):
         except:
             logger.error(traceback.format_exc())
     return wrapper
+
+# def restart():
+#     # python = sys.executable
+#     # print(sys.argv)
+#     # os.execl(python, python, * sys.argv)
+#     sys.exit()

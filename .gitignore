@@ -1,5 +1,6 @@
 __pycache__/
 test/
 config.py
+restart.py
 
 /plugins/group_helper/
