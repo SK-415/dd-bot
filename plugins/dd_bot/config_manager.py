@@ -26,9 +26,8 @@ __plugin_usage__ = r"""DD机目前支持的功能有：
 添加后默认开启直播和动态推送，在哪里（群聊/私聊）添加就会在哪里推送
 """
 
-# @nonebot.on_command('添加主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('添加主播')
 @log
+@nonebot.on_command('添加主播')
 async def add_up(session):
     """添加主播并创建对应配置文件"""
     config = await read_config()
@@ -86,9 +85,8 @@ async def add_up(session):
         await update_config(config)
         await session.send(f"已添加{name}（{uid}）")
 
-# @nonebot.on_command('主播列表', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('主播列表')
 @log
+@nonebot.on_command('主播列表')
 async def list_up(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -115,9 +113,8 @@ async def list_up(session):
         message += f"（{uid}）\n"
     await session.send(message=message)
     
-# @nonebot.on_command('删除主播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('删除主播')
 @log
+@nonebot.on_command('删除主播')
 async def delete_up(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -171,9 +168,8 @@ async def delete_up(session):
     await update_config(config)
     await session.finish(f"已删除 {name}（{uid}）")
 
-# @nonebot.on_command('开启动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('开启动态')
 @log
+@nonebot.on_command('开启动态')
 async def dynamic_on(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -206,9 +202,8 @@ async def dynamic_on(session):
     await update_config(config)
     await session.finish(f"已开启 {name}（{uid}）的动态推送")
 
-# @nonebot.on_command('关闭动态', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('关闭动态')
 @log
+@nonebot.on_command('关闭动态')
 async def dynamic_off(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -241,9 +236,8 @@ async def dynamic_off(session):
     await update_config(config)
     await session.finish(f"已关闭 {name}（{uid}）的动态推送")
 
-# @nonebot.on_command('开启直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('开启直播')
 @log
+@nonebot.on_command('开启直播')
 async def live_on(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -276,9 +270,8 @@ async def live_on(session):
     await update_config(config)
     await session.finish(f"已开启 {name}（{uid}）的直播推送")
 
-# @nonebot.on_command('关闭直播', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
-@nonebot.on_command('关闭直播')
 @log
+@nonebot.on_command('关闭直播')
 async def live_off(session):
     config = await read_config()
     if not await permission_check(session, config):
@@ -311,8 +304,8 @@ async def live_off(session):
     await update_config(config)
     await session.finish(f"已关闭 {name}（{uid}）的直播推送")
 
-@on_command('开启at', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
+@on_command('开启at', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 async def at_on(session: CommandSession):
     if session.event.detail_type != 'group':
         await session.send("只有群里才能开启@全体")
@@ -331,8 +324,8 @@ async def at_on(session: CommandSession):
     name = config['uid'][uid]['name']
     await session.send(f"已开启 {name}（{uid}）的 @全体成员")
 
-@on_command('关闭at', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
+@on_command('关闭at', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 async def at_off(session: CommandSession):
     if session.event.detail_type != 'group':
         await session.send("只有群里才能关闭@全体")
@@ -351,8 +344,8 @@ async def at_off(session: CommandSession):
     name = config['uid'][uid]['name']
     await session.send(f"已关闭 {name}（{uid}）的 @全体成员")
 
-@on_command('开启权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
+@on_command('开启权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 async def permission_on(session: CommandSession):
     if session.event.detail_type != 'group':
         await session.send("只有群里才能设置权限")
@@ -369,8 +362,8 @@ async def permission_on(session: CommandSession):
     await update_config(config)
     await session.send(f"已开启权限限制，只有管理员才能触发指令")
 
-@on_command('关闭权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
+@on_command('关闭权限', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 async def permission_off(session: CommandSession):
     if session.event.detail_type != 'group':
         await session.send("只有群里才能设置权限")
@@ -403,8 +396,8 @@ async def permission_check(session: CommandSession, config):
     else:
         return True # 私聊默认返回 True
 
-@nonebot.on_command('修复配置', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 @log
+@nonebot.on_command('修复配置', permission=GROUP_ADMIN | PRIVATE_FRIEND | SUPERUSER)
 async def fix_config(session):
     config = await read_config()
     dy_counter = Counter() # 动态推送开启用户数统计

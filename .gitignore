@@ -1,6 +1,7 @@
 __pycache__/
 test/
 config.py
-restart.py
 
+/plugins/dd_bot/restart.py
 /plugins/group_helper/
+/plugins/sk_bot/
