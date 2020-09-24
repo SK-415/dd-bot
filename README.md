@@ -24,7 +24,65 @@
 
 ## 使用说明
 
-待更新
+先写个简单的说明, 之后再完善.
+
+先下载 [`go-cqhttp`](https://github.com/Mrs4s/go-cqhttp/releases) 然后配置首次启动后自动生成的 `config.json` , 以下给出一份参考配置:
+
+```
+{
+	"uin": 你的QQ号,
+	"password": "你的QQ密码",
+	"encrypt_password": false,
+	"password_encrypted": "",
+	"enable_db": true,
+	"access_token": "",
+	"relogin": {
+		"enabled": true,
+		"relogin_delay": 3,
+		"max_relogin_times": 0
+	},
+	"ignore_invalid_cqcode": false,
+	"force_fragmented": true,
+	"heartbeat_interval": 0,
+	"http_config": {
+		"enabled": false,
+		"host": "0.0.0.0",
+		"port": 5700,
+		"timeout": 0,
+		"post_urls": {}
+	},
+	"ws_config": {
+		"enabled": false,
+		"host": "0.0.0.0",
+		"port": 6700
+	},
+	"ws_reverse_servers": [
+		{
+			"enabled": true,
+			"reverse_url": "ws://127.0.0.1:8080/ws",
+			"reverse_api_url": "",
+			"reverse_event_url": "",
+			"reverse_reconnect_interval": 3000
+		}
+	],
+	"post_message_format": "string",
+	"debug": false,
+	"log_level": ""
+}
+```
+
+然后将本项目克隆或下载到本地, 确认安装了 `Python3.7+` . 之后在项目根目录运行 `cmd` , 依次执行:
+
+```
+pip install -r requirements.txt
+pyppeteer-install
+```
+
+如果运行 `pyppeteer-install` 遇到 SSL 问题, 可以参考[这篇博客](https://www.sk415.com/article/article-detail/7/)最下面
+
+安装完毕后就可以在命令行运行 `python bot.py` 或者直接双击 `bot.py` 文件运行了. 运行时请确保 `go-cqhttp` 也在正常工作.
+
+本人目前学业繁忙, 暂时没有时间维护这个项目, 如果在使用过程中遇到问题, 可以提issue或者加我QQ: 2967923486
 
 ## 实装列表
 
