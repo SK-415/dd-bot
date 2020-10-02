@@ -94,6 +94,8 @@ pyppeteer-install
 - [@宫本夏凌](https://space.bilibili.com/1319467)
 - [@秋凛子Rinco](https://space.bilibili.com/479633069)
 - [@月霖_咕咕](https://space.bilibili.com/4322043)
+- [@芮音GoryRuin](https://space.bilibili.com/427275473)
+- [@凛星RinStar](https://space.bilibili.com/82803440)
 
 ## 鸣谢
 
