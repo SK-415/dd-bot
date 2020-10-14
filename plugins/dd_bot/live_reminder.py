@@ -1,4 +1,4 @@
-import nonebot
+﻿import nonebot
 from .utils import read_config, update_config
 from .utils import User, log
 import asyncio
@@ -24,7 +24,7 @@ async def _():
 
     old_status = ups[uid]
     user = User(uid)
-    user_info = await user.get_live_info()
+    user_info = (await user.get_info())['live_room']
     new_status = user_info['liveStatus']
     if new_status != old_status:
         config['status'][uid] = new_status

@@ -26,24 +26,24 @@ if __name__ == '__main__':
             if not path.isdir(path.join('data', dirname)):
                 os.makedirs(path.join('data', dirname))
 
-    # 设置 DEBUG 日志
-    debug_handler = logging.handlers.TimedRotatingFileHandler(
-        filename=path.join('log', 'debug.log'), 
-        when='midnight', 
-        interval=1, 
-        backupCount=0, # 保留日志个数, 0不删除
-        encoding='utf-8'
-        )
-    debug_handler.setLevel(logging.DEBUG)
-    debug_handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s"))
-    logger.addHandler(debug_handler)
+    # # 设置 DEBUG 日志
+    # debug_handler = logging.handlers.TimedRotatingFileHandler(
+    #     filename=path.join('log', 'debug.log'), 
+    #     when='midnight', 
+    #     interval=1, 
+    #     backupCount=3, # 保留日志个数, 0不删除
+    #     encoding='utf-8'
+    #     )
+    # debug_handler.setLevel(logging.DEBUG)
+    # debug_handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s"))
+    # logger.addHandler(debug_handler)
 
     # 设置 ERROR 日志
     error_handler = logging.handlers.TimedRotatingFileHandler(
         filename=path.join('log', 'error.log'), 
         when='midnight', 
         interval=1, 
-        backupCount=0, # 保留日志个数, 0不删除
+        backupCount=3, # 保留日志个数, 0不删除
         encoding='utf-8'
         )
     error_handler.setLevel(logging.ERROR)
