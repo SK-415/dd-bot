@@ -1,3 +1,7 @@
+# 本项目已经迁移至 [HarukaBot](https://github.com/SK-415/HarukaBot), 今后不再维护
+
+**[HarukaBot](https://github.com/SK-415/HarukaBot) 已继承本项目全部功能, 且在此基础上进行了诸多优化. 同时 [HarukaBot](https://github.com/SK-415/HarukaBot) 兼容 dd-bot 的配置文件. 请放心迁移.**
+
 # 哔哩哔哩DD机
 
 [![VERSION](https://img.shields.io/github/v/release/SK-415/bilibili-dd-bot)](https://github.com/SK-415/bilibili-dd-bot/releases)
